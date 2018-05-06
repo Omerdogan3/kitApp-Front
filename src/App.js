@@ -10,7 +10,9 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import GithubLogo from './components/githubLogo';
 
-import PricePanel from './PricePanel'
+import PricePanel from './PricePanel';
+
+import Img from 'react-image';
 
 const util = require('util');
 
@@ -19,9 +21,9 @@ class App extends Component {
     super(props);
 
     this.state = {
-      barcode: '',
+      barcode: "",
       title: "",
-      nobelkitap: '',
+      nobelkitap: "",
       atlaskitap: "",
       kitapkoala: "",
       hepsiBuradaPrice: "",
@@ -29,6 +31,7 @@ class App extends Component {
       pandoraPrice: "",
       idefixPrice: "",
       drPrice: "",
+      bookCoverLink: "",
       returned: false
     };
     this._handlebarcode = this._handlebarcode.bind(this);
@@ -53,6 +56,7 @@ class App extends Component {
           "pandoraPrice": res.data.pandoraPrice,
           "idefixPrice": res.data.idefixPrice,
           "drPrice": res.data.drPrice,
+          "bookCoverLink": res.data.bookCoverLink,
           returned: true
         }
       );
@@ -74,19 +78,44 @@ class App extends Component {
             {this.state.returned === true ? 
               <Paper zDepth={2} className="price-table">
                 <h1>{this.state.title}</h1>
-                <h3>Nobel Kitap: {this.state.nobelkitap}</h3>
-                <h3>Kitap Koala: {this.state.kitapkoala}</h3>
-                <h3>Hepsi Burada: {this.state.hepsiBuradaPrice}</h3>
-                <h3>Babil: {this.state.babilPrice}</h3>
-                <h3>Pandora: {this.state.pandoraPrice}</h3>
-                <h3>Idefix: {this.state.idefixPrice}</h3>
-                <h3>D&R: {this.state.drPrice}</h3>
+                {this.state.nobelkitap == ('' || 0) ?
+                  <h3></h3>:<h3>Nobel Kitap: {this.state.nobelkitap}</h3>
+                }
+
+                {this.state.kitapkoala == ('' || 0) ?
+                  <h3></h3>:<h3>Kitap Koala: {this.state.kitapkoala}</h3>
+                }
+
+                {this.state.hepsiBuradaPrice == ("" || 0) ?
+                  <h3></h3>:<h3>Hepsi Burada: {this.state.hepsiBuradaPrice}</h3>
+                }
+
+                {this.state.babilPrice == ('' || 0) ?
+                  <h3></h3>:<h3>Babil: {this.state.babilPrice}</h3>
+                }
+
+                {this.state.pandoraPrice == ('' || 0) ?
+                  <h3></h3>:<h3>Pandora: {this.state.pandoraPrice}</h3>
+                } 
+
+                {this.state.idefixPrice == ('' || 0) ?
+                  <h3></h3>:<h3>Idefix: {this.state.idefixPrice}</h3>
+                }
+
+                {this.state.drPrice == ('' || 0) ?
+                  <h3></h3>:<h3>D&R: {this.state.drPrice}</h3>
+                }
+                <Img src={this.state.bookCoverLink} width="150" height="230"/>
               </Paper>  
+
+              
+              
               :
               <h1>{this.state.barcode}</h1>
+              
             }
             
-           
+            
           </div>
         <GithubLogo title={this.state.title}/>
       </MuiThemeProvider>
