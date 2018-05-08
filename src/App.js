@@ -36,6 +36,7 @@ class App extends Component {
     };
     this._handlebarcode = this._handlebarcode.bind(this);
     this.getPriceData = this.getPriceData.bind(this);
+    this.onEnterPress = this.onEnterPress.bind(this);
   }
 
   _handlebarcode(event) {
@@ -64,12 +65,21 @@ class App extends Component {
   }
 
 
+  onEnterPress = (e) => {
+    if(e.keyCode == 13 && e.shiftKey == false) {
+      console.log("Enter!");
+      e.preventDefault();
+      this.getPriceData(e);
+    }
+  }
+
+
   render() {
     return (
       <MuiThemeProvider >
         <h1>KitApp Price Finder</h1>
           <div className="container">
-            <TextField className="text-input" floatingLabelText="ISBN"  onChange={this._handlebarcode}
+            <TextField className="text-input" floatingLabelText="ISBN"  onChange={this._handlebarcode} onKeyDown={this.onEnterPress}
             hintText="Barcode Number"  style = {{width: 400}} 
             />
             <RaisedButton label="Scan" primary={true} fullWidth={false} onClick={this.getPriceData}/>
