@@ -13,6 +13,7 @@ import GithubLogo from './components/githubLogo';
 import PricePanel from './PricePanel';
 
 import Img from 'react-image';
+import { darkWhite } from 'material-ui/styles/colors';
 
 const util = require('util');
 
@@ -32,11 +33,19 @@ class App extends Component {
       idefixPrice: "",
       drPrice: "",
       bookCoverLink: "",
-      returned: false
+      imageData: [],
+      returned: false,
+      imageReturned: false
     };
     this._handlebarcode = this._handlebarcode.bind(this);
     this.getPriceData = this.getPriceData.bind(this);
     this.onEnterPress = this.onEnterPress.bind(this);
+    this.getImageData = this.getImageData.bind(this);
+    this.resetState = this.resetState.bind(this);
+  }
+
+  componentDidMount = () => {
+    this.getImageData();
   }
 
   _handlebarcode(event) {
@@ -65,6 +74,33 @@ class App extends Component {
   }
 
 
+  getImageData = async () =>{
+    axios.get('https://kitappapi.herokuapp.com/imageall/:').then(res => {
+      this.setState({
+        imageData: res.data.results,
+        imageReturned: true
+      })
+    });
+  }
+
+  resetState = () => {
+    this.setState({
+      barcode: "",
+      title: "",
+      nobelkitap: "",
+      atlaskitap: "",
+      kitapkoala: "",
+      hepsiBuradaPrice: "",
+      babilPrice: "",
+      pandoraPrice: "",
+      idefixPrice: "",
+      drPrice: "",
+      bookCoverLink: "",
+      returned: false
+    })
+  }
+
+
   onEnterPress = (e) => {
     if(e.keyCode == 13 && e.shiftKey == false) {
       console.log("Enter!");
@@ -77,15 +113,34 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider >
-        <h1>KitApp Price Finder</h1>
+      <div className="all-container">
+
+      {this.state.imageReturned === true ?
+        <div className="image-container">
+          {
+            this.state.imageData.map( (item, i) => {
+              return  <Img src={item.image_link}/>
+            })
+          }
+        </div> : null}
+
+
+      <Paper className={this.state.returned === true ? "paper-container-returned" : "paper-container-begin" } zDepth={3} rounded={true} style={{marginBottom: 15}}>
+        
           <div className="container">
-            <TextField className="text-input" floatingLabelText="ISBN"  onChange={this._handlebarcode} onKeyDown={this.onEnterPress}
-            hintText="Barcode Number"  style = {{width: 400}} 
-            />
-            <RaisedButton label="Scan" primary={true} fullWidth={false} onClick={this.getPriceData}/>
+          
+            {this.state.returned === false ?
+              <div>
+              <h1>KitApp Price Finder</h1>
+                <TextField className="text-input" floatingLabelText="ISBN"  onChange={this._handlebarcode} onKeyDown={this.onEnterPress}
+                hintText="Barcode Number"  style = {{width: 400,}} 
+                />
+                <RaisedButton label="Scan" primary={true} fullWidth={false} onClick={this.getPriceData}/>
+              </div> : null }
             
             
             {this.state.returned === true ? 
+              <div>
               <Paper zDepth={2} className="price-table">
                 <h1>{this.state.title}</h1>
                 {this.state.nobelkitap == ('' || 0) ?
@@ -116,18 +171,14 @@ class App extends Component {
                   <h3></h3>:<h3>D&R: {this.state.drPrice}</h3>
                 }
                 <Img src={this.state.bookCoverLink} width="150" height="230"/>
-              </Paper>  
-
-              
-              
-              :
-              <h1>{this.state.barcode}</h1>
-              
+              </Paper> 
+              <RaisedButton label="Yeni Arama" style={{marginTop:10}} primary={true} fullWidth={false} onClick={this.resetState}/>
+              </div>
+              : <h1>{this.state.barcode}</h1>   
             }
-            
-            
-          </div>
-        <GithubLogo title={this.state.title}/>
+            </div> 
+          </Paper>
+        </div>
       </MuiThemeProvider>
     );
   }
