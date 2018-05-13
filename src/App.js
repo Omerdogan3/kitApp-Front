@@ -7,13 +7,18 @@ import './App.css';
 import axios from 'axios';
 
 import TextField from 'material-ui/TextField';
+
 import RaisedButton from 'material-ui/RaisedButton';
 import GithubLogo from './components/githubLogo';
+
+
 
 import PricePanel from './PricePanel';
 
 import Img from 'react-image';
 import { darkWhite } from 'material-ui/styles/colors';
+
+import FadeIn from "react-lazyload-fadein";
 
 const util = require('util');
 
@@ -42,6 +47,7 @@ class App extends Component {
     this.onEnterPress = this.onEnterPress.bind(this);
     this.getImageData = this.getImageData.bind(this);
     this.resetState = this.resetState.bind(this);
+    this.checkIfISBN = this.checkIfISBN.bind(this);
   }
 
   componentDidMount = () => {
@@ -54,24 +60,40 @@ class App extends Component {
 
   getPriceData = (event) =>{
     this.setState({returned: false});
-    axios.get(util.format('https://kitappapi.herokuapp.com/price/%s', this.state.barcode)).then(res => {
-      this.setState(
-        {
-          "title": res.data.title,
-          "nobelkitap": res.data.nobelkitap,
-          "atlaskitap": res.data.atlaskitap,
-          "kitapkoala": res.data.kitapkoala,
-          "hepsiBuradaPrice": res.data.hepsiBuradaPrice,
-          "babilPrice": res.data.babilPrice,
-          "pandoraPrice": res.data.pandoraPrice,
-          "idefixPrice": res.data.idefixPrice,
-          "drPrice": res.data.drPrice,
-          "bookCoverLink": res.data.bookCoverLink,
-          returned: true
-        }
-      );
-    });
+    if(!this.checkIfISBN(this.state.barcode)){
+      
+    }else{
+      axios.get(util.format('https://kitappapi.herokuapp.com/price/%s', this.state.barcode)).then(res => {
+        this.setState(
+          {
+            "title": res.data.title,
+            "nobelkitap": res.data.nobelkitap,
+            "atlaskitap": res.data.atlaskitap,
+            "kitapkoala": res.data.kitapkoala,
+            "hepsiBuradaPrice": res.data.hepsiBuradaPrice,
+            "babilPrice": res.data.babilPrice,
+            "pandoraPrice": res.data.pandoraPrice,
+            "idefixPrice": res.data.idefixPrice,
+            "drPrice": res.data.drPrice,
+            "bookCoverLink": res.data.bookCoverLink,
+            returned: true
+          }
+        );
+      });
+
+    }
+
+
+    
   }
+
+  checkIfISBN = (x) => {
+    if (! /^[0-9]{13}$/.test(x)) {
+      alert("Please enter a valid ISBN number!");
+      return false;
+    } return true;
+  }
+  
 
 
   getImageData = async () =>{
@@ -115,33 +137,34 @@ class App extends Component {
       <MuiThemeProvider >
       <div className="all-container">
 
+
+
       {this.state.imageReturned === true ?
         <div className="image-container">
           {
             this.state.imageData.map( (item, i) => {
-              return  <Img src={item.image_link}/>
+              return  <Img src={item.image_link} key={i}/>
             })
           }
         </div> : null}
 
 
-      <Paper className={this.state.returned === true ? "paper-container-returned" : "paper-container-begin" } zDepth={3} rounded={true} style={{marginBottom: 15}}>
+        <div className = "container">
+
+      <Paper className={this.state.returned === true ? "paper-container-returned" : "paper-container-begin" } zDepth={4} rounded={true} style={{marginBottom: 15}}>
         
-          <div className="container">
-          
             {this.state.returned === false ?
               <div>
               <h1>KitApp Price Finder</h1>
                 <TextField className="text-input" floatingLabelText="ISBN"  onChange={this._handlebarcode} onKeyDown={this.onEnterPress}
-                hintText="Barcode Number"  style = {{width: 400,}} 
+                hintText="Barcode Number"  style = {{flex: 1}} 
                 />
-                <RaisedButton label="Scan" primary={true} fullWidth={false} onClick={this.getPriceData}/>
+                <RaisedButton label="Ara" primary={true} fullWidth={false} onClick={this.getPriceData}/>
               </div> : null }
             
             
             {this.state.returned === true ? 
               <div>
-              <Paper zDepth={2} className="price-table">
                 <h1>{this.state.title}</h1>
                 {this.state.nobelkitap == ('' || 0) ?
                   <h3></h3>:<h3>Nobel Kitap: {this.state.nobelkitap}</h3>
@@ -171,13 +194,13 @@ class App extends Component {
                   <h3></h3>:<h3>D&R: {this.state.drPrice}</h3>
                 }
                 <Img src={this.state.bookCoverLink} width="150" height="230"/>
-              </Paper> 
+                <br/>
               <RaisedButton label="Yeni Arama" style={{marginTop:10}} primary={true} fullWidth={false} onClick={this.resetState}/>
-              </div>
-              : <h1>{this.state.barcode}</h1>   
+              </div> : <h1>{this.state.barcode}</h1>   
             }
-            </div> 
+            
           </Paper>
+          </div>
         </div>
       </MuiThemeProvider>
     );
