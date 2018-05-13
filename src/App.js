@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
-import './App.css';
 
 import axios from 'axios';
 
@@ -11,15 +10,12 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import GithubLogo from './components/githubLogo';
 
-
-
-import PricePanel from './PricePanel';
+import LinearProgress from 'material-ui/LinearProgress';
 
 import Img from 'react-image';
-import { darkWhite } from 'material-ui/styles/colors';
 
-import FadeIn from "react-lazyload-fadein";
 
+import './App.css';
 const util = require('util');
 
 class App extends Component {
@@ -39,6 +35,8 @@ class App extends Component {
       drPrice: "",
       bookCoverLink: "",
       imageData: [],
+      completed: 0,
+      inProgress: false,
       returned: false,
       imageReturned: false
     };
@@ -59,7 +57,7 @@ class App extends Component {
   }
 
   getPriceData = (event) =>{
-    this.setState({returned: false});
+    this.setState({returned: false, inProgress: true});
     if(!this.checkIfISBN(this.state.barcode)){
       
     }else{
@@ -76,7 +74,8 @@ class App extends Component {
             "idefixPrice": res.data.idefixPrice,
             "drPrice": res.data.drPrice,
             "bookCoverLink": res.data.bookCoverLink,
-            returned: true
+            returned: true,
+            inProgress: false
           }
         );
       });
@@ -150,7 +149,7 @@ class App extends Component {
 
 
         <div className = "container">
-
+          
       <Paper className={this.state.returned === true ? "paper-container-returned" : "paper-container-begin" } zDepth={4} rounded={true} style={{marginBottom: 15}}>
         
             {this.state.returned === false ?
@@ -159,10 +158,16 @@ class App extends Component {
                 <TextField className="text-input" floatingLabelText="ISBN"  onChange={this._handlebarcode} onKeyDown={this.onEnterPress}
                 hintText="Barcode Number"  style = {{flex: 1}} 
                 />
-                <RaisedButton label="Ara" primary={true} fullWidth={false} onClick={this.getPriceData}/>
+                <RaisedButton label="Ara" primary={true} disabled={this.state.inProgress === true ? true : false}  fullWidth={false} onClick={this.getPriceData}/>
               </div> : null }
+
+
+              <div className="linear-progress">
+                <h1>{this.state.inProgress === true ?  <LinearProgress mode="indeterminate" />: null}</h1>
+              </div>
             
-            
+
+
             {this.state.returned === true ? 
               <div>
                 <h1>{this.state.title}</h1>
@@ -195,11 +200,10 @@ class App extends Component {
                 }
                 <Img src={this.state.bookCoverLink} width="150" height="230"/>
                 <br/>
-              <RaisedButton label="Yeni Arama" style={{marginTop:10}} primary={true} fullWidth={false} onClick={this.resetState}/>
-              </div> : <h1>{this.state.barcode}</h1>   
-            }
-            
-          </Paper>
+                <RaisedButton label="Yeni Arama" style={{marginTop:10}} primary={true} fullWidth={false} onClick={this.resetState}/>
+                
+              </div> : null}
+            </Paper>
           </div>
         </div>
       </MuiThemeProvider>

@@ -14,6 +14,7 @@
   color: white;
 }
 
+
 .price-table{
   padding-bottom: 10px;
   padding-top: -2px;
@@ -65,24 +66,23 @@ Img {
   padding-bottom: 10px;
 }
 
+.linear-progress{
+  width: 80%;
+  margin: auto auto;
+}
+
 .paper-container-returned{
-  margin-top: 4%;
-  padding-top: 5px;
+  margin-top: 1%;
+  padding-top: 1px;
   padding-bottom: 35px;
   margin-left:auto;
   margin-right:auto;
   width: 70%;
 }
 
-.github-logo {
-  position:absolute;
-  bottom:5px;
-  right: 10px;
-}
-
 h1 {
-  padding: 10px;
-  margin-top: 30px;
+  padding: 5px;
+  margin-top: 20px;
   text-align: center;
   color: #222;
 }
