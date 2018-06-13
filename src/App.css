@@ -8,9 +8,7 @@
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
+  width: 100%;
   color: white;
 }
 
@@ -90,6 +88,7 @@ h1 {
 .text-input {
   text-align: center;
 }
+
 
 .App-title {
   font-size: 1.5em;

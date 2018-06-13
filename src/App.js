@@ -14,9 +14,16 @@ import LinearProgress from 'material-ui/LinearProgress';
 
 import Img from 'react-image';
 
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+
 
 import './App.css';
 const util = require('util');
+
+
 
 class App extends Component {
   constructor(props) {
@@ -38,7 +45,8 @@ class App extends Component {
       completed: 0,
       inProgress: false,
       returned: false,
-      imageReturned: false
+      imageReturned: false,
+      selectedPage: 0,
     };
     this._handlebarcode = this._handlebarcode.bind(this);
     this.getPriceData = this.getPriceData.bind(this);
@@ -79,12 +87,12 @@ class App extends Component {
           }
         );
       });
-
     }
-
-
-    
   }
+
+  handleChange = (event, selectedPage) => {
+    this.setState({ selectedPage });
+  };
 
   checkIfISBN = (x) => {
     if (! /^[0-9]{13}$/.test(x)) {
@@ -93,7 +101,6 @@ class App extends Component {
     } return true;
   }
   
-
 
   getImageData = async () =>{
     axios.get('https://kitappapi.herokuapp.com/imageall/:').then(res => {
@@ -123,7 +130,7 @@ class App extends Component {
 
 
   onEnterPress = (e) => {
-    if(e.keyCode == 13 && e.shiftKey == false) {
+    if(e.keyCode === 13 && e.shiftKey === false) {
       console.log("Enter!");
       e.preventDefault();
       this.getPriceData(e);
@@ -132,9 +139,29 @@ class App extends Component {
 
 
   render() {
+
+    const { classes } = this.props;
+    const { selectedPage } = this.state;
+
     return (
       <MuiThemeProvider >
-      <div className="all-container">
+
+        <BottomNavigation
+          value={selectedPage}
+          onChange={this.handleChange}
+          showLabels
+          className="App-header"
+        >
+          <BottomNavigationAction label="Anasayfa" />
+          <BottomNavigationAction label="Fiyat Karsilastirma" />
+          <BottomNavigationAction label="Nearby" />
+        </BottomNavigation>
+
+        <div className="all-container">
+
+
+      
+
 
 
 
@@ -154,9 +181,9 @@ class App extends Component {
         
             {this.state.returned === false ?
               <div>
-              <h1>KitApp Price Finder</h1>
+              <h1>KitApp Fiyat Karsilastirma</h1>
                 <TextField className="text-input" floatingLabelText="ISBN"  onChange={this._handlebarcode} onKeyDown={this.onEnterPress}
-                hintText="Barcode Number"  style = {{flex: 1}} 
+                hintText="Barkod Numarasi"  style = {{flex: 1}} 
                 />
                 <RaisedButton label="Ara" primary={true} disabled={this.state.inProgress === true ? true : false}  fullWidth={false} onClick={this.getPriceData}/>
               </div> : null }
@@ -171,31 +198,31 @@ class App extends Component {
             {this.state.returned === true ? 
               <div>
                 <h1>{this.state.title}</h1>
-                {this.state.nobelkitap == ('' || 0) ?
+                {this.state.nobelkitap === ('' || 0) ?
                   <h3></h3>:<h3>Nobel Kitap: {this.state.nobelkitap}</h3>
                 }
 
-                {this.state.kitapkoala == ('' || 0) ?
+                {this.state.kitapkoala === ('' || 0) ?
                   <h3></h3>:<h3>Kitap Koala: {this.state.kitapkoala}</h3>
                 }
 
-                {this.state.hepsiBuradaPrice == ("" || 0) ?
+                {this.state.hepsiBuradaPrice === ("" || 0) ?
                   <h3></h3>:<h3>Hepsi Burada: {this.state.hepsiBuradaPrice}</h3>
                 }
 
-                {this.state.babilPrice == ('' || 0) ?
+                {this.state.babilPrice === ('' || 0) ?
                   <h3></h3>:<h3>Babil: {this.state.babilPrice}</h3>
                 }
 
-                {this.state.pandoraPrice == ('' || 0) ?
+                {this.state.pandoraPrice === ('' || 0) ?
                   <h3></h3>:<h3>Pandora: {this.state.pandoraPrice}</h3>
                 } 
 
-                {this.state.idefixPrice == ('' || 0) ?
+                {this.state.idefixPrice === ('' || 0) ?
                   <h3></h3>:<h3>Idefix: {this.state.idefixPrice}</h3>
                 }
 
-                {this.state.drPrice == ('' || 0) ?
+                {this.state.drPrice === ('' || 0) ?
                   <h3></h3>:<h3>D&R: {this.state.drPrice}</h3>
                 }
                 <Img src={this.state.bookCoverLink} width="150" height="230"/>
