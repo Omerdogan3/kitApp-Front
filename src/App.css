@@ -10,6 +10,13 @@
 .App-header {
   width: 100%;
   color: white;
+  
+}
+
+.title-color {
+  background: -webkit-linear-gradient(#232526,#414345);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 
@@ -31,6 +38,7 @@
   position: absolute;
   left: 0px;
   top: 0px;
+  margin-top: 50px;
 }
 
 Img {
