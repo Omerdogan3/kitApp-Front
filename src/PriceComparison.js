@@ -56,16 +56,16 @@ class PriceComparison extends Component {
       axios.get(util.format('https://kitappapi.herokuapp.com/price/%s', this.state.barcode)).then(res => {
         this.setState(
           {
-            "title": res.data.title,
-            "nobelkitap": res.data.nobelkitap,
-            "atlaskitap": res.data.atlaskitap,
-            "kitapkoala": res.data.kitapkoala,
-            "hepsiBuradaPrice": res.data.hepsiBuradaPrice,
-            "babilPrice": res.data.babilPrice,
-            "pandoraPrice": res.data.pandoraPrice,
-            "idefixPrice": res.data.idefixPrice,
-            "drPrice": res.data.drPrice,
-            "bookCoverLink": res.data.bookCoverLink,
+            "title": res.data[0].title,
+            "nobelkitap": res.data[0].nobelkitap,
+            "atlaskitap": res.data[0].atlaskitap,
+            "kitapkoala": res.data[0].kitapkoala,
+            "hepsiBuradaPrice": res.data[0].hepsiBuradaPrice,
+            "babilPrice": res.data[0].babilPrice,
+            "pandoraPrice": res.data[0].pandoraPrice,
+            "idefixPrice": res.data[0].idefixPrice,
+            "drPrice": res.data[0].drPrice,
+            "bookCoverLink": res.data[0].bookCoverLink,
             returned: true,
             inProgress: false
           }
