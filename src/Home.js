@@ -13,14 +13,14 @@ class Home extends Component {
 
     render() {
         return(
-					<div className = "container">  
-						<Grow in={true}>
-							<Paper className="paper-container-returned" zDepth={4} rounded={true} style={{marginBottom: 15}}>
-									<h1 className="title-color">KitApp</h1>
-									<p></p>
-							</Paper>
-						</Grow>
-					</div>
+            <div className = "container">  
+                <Grow in={true}>
+                    <Paper className="paper-container-returned" zDepth={4} rounded={true} style={{marginBottom: 15}}>
+                            <h1 className="title-color">KitApp</h1>
+                            <p></p>
+                    </Paper>
+                </Grow>
+            </div>
         )
     }
 }
